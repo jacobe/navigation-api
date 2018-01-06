@@ -25,7 +25,7 @@ namespace NavigationApi.Test.Controllers
             var mapRepositoryMock = new Mock<IMapRepository>();
             mapRepositoryMock
                 .Setup(m => m.Create(It.IsAny<Map>()))
-                .Returns(Task.CompletedTask)
+                .Returns(Task.FromResult(new Map("map1")))
                 .Verifiable();
 
             var hostBuilder = new WebHostBuilder()

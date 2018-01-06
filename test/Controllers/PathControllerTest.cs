@@ -40,7 +40,7 @@ namespace NavigationApi.Test.Controllers
 
             using (var server = new TestServer(hostBuilder))
             {
-                var response = await server.CreateRequest("/maps/map1/path")
+                var response = await server.CreateRequest("/maps/map1/path?start=a&end=b")
                     .GetAsync();
 
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);

@@ -32,20 +32,31 @@ namespace NavigationApi.Test.Persistance.CosmosDb
                 new Node("a"),
                 new Node("b"));
             map.AddEdge("a", "b", 5);
-            await repository.Create(map);
+            var result1 = await repository.Create(map);
+            Assert.Equal(map, result1);
 
-            var result = await repository.GetById(mapId);
-            Assert.NotNull(result);
-            Assert.Equal(mapId, result.Id);
-            Assert.Contains("a", result.Nodes.Keys);
-            Assert.Contains("b", result.Nodes.Keys);
-            Assert.Equal(5, result.Nodes["a"].Edges[0].Distance);
+            var result2 = await repository.GetById(mapId);
+            Assert.NotNull(result2);
+            Assert.Equal(mapId, result2.Id);
+            Assert.Contains("a", result2.Nodes.Keys);
+            Assert.Contains("b", result2.Nodes.Keys);
+            Assert.Equal(5, result2.Nodes["a"].Edges[0].Distance);
         }
 
         [Fact]
-        public void Throws_exception_when_map_with_same_id_already_exists()
+        public async Task Returns_null_when_map_with_same_id_already_exists()
         {
-            // TODO
+            var repository = new MapRepository(_documentClient, DatabaseId);
+            var mapId = "testmap-" + DateTime.Now.ToString("u");
+            var map = new Map(mapId,
+                new Node("a"),
+                new Node("b"));
+            map.AddEdge("a", "b", 5);
+            var result1 = await repository.Create(map);
+            Assert.Equal(map, result1);
+
+            var result2 = await repository.Create(map);
+            Assert.Null(result2);
         }
     }
 }

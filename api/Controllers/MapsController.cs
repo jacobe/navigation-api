@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NavigationApi.Api.Domain;
@@ -42,7 +43,11 @@ namespace NavigationApi.Api.Controllers
                 return BadRequest($"Map is invalid. {e.Message}");
             }
             
-            await _mapRepository.Create(map);
+            var result = await _mapRepository.Create(map);
+            if (result == null)
+            {
+                return StatusCode((int) HttpStatusCode.Conflict, "Map with this ID already exists");
+            }
 
             return Created(Url.Action("GetMap", new { id = createMapRequest.Id }), null);
         }

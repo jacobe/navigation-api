@@ -21,7 +21,7 @@ namespace NavigationApi.Api.Persistance.CosmosDb
             _databaseId = databaseId;
         }
 
-        public async Task Create(Map map)
+        public async Task<Map> Create(Map map)
         {
             var mapDocument = new MapDocument
             {
@@ -31,7 +31,22 @@ namespace NavigationApi.Api.Persistance.CosmosDb
             };
 
             var collectionUri = UriFactory.CreateDocumentCollectionUri(_databaseId, CollectionId);
-            await _documentClient.CreateDocumentAsync(collectionUri, mapDocument);
+
+            try
+            {
+                await _documentClient.CreateDocumentAsync(collectionUri, mapDocument);
+            }
+            catch (DocumentClientException dce)
+            {
+                if (dce.Error.Code == "Conflict")
+                {
+                    return null; // map with the same ID already exists
+                }
+
+                throw;
+            }
+
+            return map;
         }
 
         public async Task<Map> GetById(string id)
