@@ -51,6 +51,7 @@ namespace NavigationApi.Test
         }
 
         public Node Node { get; }
+        public string NodeId => Node.Id;
         public int Distance { get; }
     }
 }

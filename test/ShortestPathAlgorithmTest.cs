@@ -114,37 +114,38 @@ namespace NavigationApi.Test
         {
             var nodes = map.Nodes;
 
-            Dictionary<string, int> dist = nodes.ToDictionary(n => n.Key, n => int.MaxValue);
-            dist[startId] = 0; // initialize distance from start node to itself to 0
-
-            Dictionary<string, string> prev = nodes.ToDictionary(n => n.Key, n => (string)null);
+            // use Dijkstra's algorithm to find the shortest path between two nodes
+            Dictionary<string, Vertex> set = nodes.ToDictionary(n => n.Key, n => Vertex.CreateFrom(n.Value));
+            set[startId].Distance = 0; // distance from start node to itself is 0
 
             var queue = new HashSet<string>(nodes.Keys);
             while (queue.Count != 0)
             {
-                var u = queue.OrderBy(v => dist[v]).First();
-                queue.Remove(u);
+                var current = queue.OrderBy(n => set[n].Distance).First(); // TODO: Can be optimized by using a priority queue
+                queue.Remove(current);
                 
-                if (u == endId) break; // we reached the target, quit here
+                if (current == endId) break; // we reached the target, quit here
 
-                foreach (var edge in nodes[u].Edges)
+                // find shortest distances to a neighour node
+                foreach (var edge in nodes[current].Edges)
                 {
-                    var v = edge.Node.Id;
-                    var alt = dist[u] + edge.Distance;
-                    if (alt < dist[v])
+                    var v = set[edge.NodeId];
+                    var alt = set[current].Distance + edge.Distance;
+                    if (alt < v.Distance)
                     {
-                        dist[v] = alt;
-                        prev[v] = u;
+                        v.Distance = alt;
+                        v.PrevId = current;
                     }
                 }
             }
 
+            // Now walk backwards through the vertex set to find the path from start to end
             var path = new List<string>();
-            var c = endId;
-            while (prev[c] != null)
+            var currentId = endId;
+            while (set[currentId].PrevId != null)
             {
-                path.Insert(0, c);
-                c = prev[c];
+                path.Insert(0, currentId);
+                currentId = set[currentId].PrevId;
             }
 
             if (path.Count == 0 && endId != startId)
@@ -152,9 +153,24 @@ namespace NavigationApi.Test
                 return null; // meaning; no path found
             }
 
-            path.Insert(0, c);
+            path.Insert(0, startId); // prepend the start node
 
-            return new Path(path, dist[endId]);
+            return new Path(path, set[endId].Distance);
+        }
+
+        class Vertex
+        {
+            public int Distance;
+            public string PrevId;
+
+            public static Vertex CreateFrom(Node n)
+            {
+                return new Vertex
+                {
+                    Distance = int.MaxValue,
+                    PrevId = null
+                };
+            }
         }
     }
 }
