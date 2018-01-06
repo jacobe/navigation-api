@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NavigationApi.Api.Domain;
@@ -35,7 +36,7 @@ namespace NavigationApi.Api.Controllers
             var path = _pathAlgorithm.Find(map, start, end);
             if (path == null)
             {
-                return Ok(null);
+                return Content("null", "application/json"); // Ok(null) would result in 204 No Content which may be more correct but doesn't comply with the specs.
             }
 
             var result = ToResultDto(path);
