@@ -3,7 +3,7 @@ using Xunit;
 
 namespace NavigationApi.Test
 {
-    public class NodeTest
+    public class NodesAndEdgesTest
     {
         [Fact]
         public void Has_a_required_id()
@@ -17,8 +17,15 @@ namespace NavigationApi.Test
         {
             var a = new Node("a");
             var b = new Node("b");
-            a.Edges.Add(new Edge(b));
+            a.Edges.Add(new Edge(b, 1));
             Assert.Equal(1, a.Edges.Count);
+        }
+
+        [Fact]
+        public void Edges_have_a_distance()
+        {
+            var edge = new Edge(new Node("a"), distance: 1);
+            Assert.Equal(1, edge.Distance);
         }
     }
 
@@ -36,11 +43,13 @@ namespace NavigationApi.Test
 
     public class Edge
     {
-        public Edge(Node neighbour)
+        public Edge(Node neighbour, int distance)
         {
             Neighbour = neighbour;
+            Distance = distance;
         }
 
         public Node Neighbour { get; }
+        public int Distance { get; }
     }
 }
