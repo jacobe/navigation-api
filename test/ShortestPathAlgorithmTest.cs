@@ -11,8 +11,9 @@ namespace NavigationApi.Test
         public void Finds_shortest_path_between_two_points_with_one_edge()
         {
             var b = new Node("b");
-            var a = new Node("a", new Edge(b, 1));
+            var a = new Node("a");
             Map map = new Map("t1", a, b);
+            map.AddEdge("a", "b", 1);
 
             var startId = "a";
             var endId = "b";
@@ -45,11 +46,11 @@ namespace NavigationApi.Test
         {
             var nodes = map.Nodes;
             if (nodes.Count == 2 
-                && nodes[0].Edges.Count == 1
-                && nodes[0].Edges[0].Neighbour == nodes[1]
-                && nodes[1].Edges.Count == 0)
+                && nodes[startId].Edges.Count == 1
+                && nodes[startId].Edges[0].Neighbour == nodes[endId]
+                && nodes[endId].Edges.Count == 0)
             {
-                return new Path(nodes, nodes[0].Edges[0].Distance);
+                return new Path(nodes.Values, nodes[startId].Edges[0].Distance);
             }
 
             throw new NotImplementedException();

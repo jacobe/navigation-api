@@ -15,8 +15,7 @@ namespace NavigationApi.Test
         [Fact]
         public void Has_nodes()
         {
-            var m1 = new Map("m1");
-            m1.Nodes.Add(new Node("a"));
+            var m1 = new Map("m1", new Node("a"));
             Assert.Equal(1, m1.Nodes.Count);
         }
     }

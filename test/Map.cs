@@ -8,10 +8,15 @@ namespace NavigationApi.Test
         public Map(string id, params Node[] nodes)
         {
             Id = id;
-            Nodes = new List<Node>(nodes);
+            Nodes = nodes.ToDictionary(n => n.Id, n => n);
         }
 
         public string Id { get; }
-        public IList<Node> Nodes { get; }
+        public IDictionary<string, Node> Nodes { get; }
+
+        public void AddEdge(string from, string to, int distance)
+        {
+            Nodes[from].Edges.Add(new Edge(Nodes[to], distance));
+        }
     }
 }
