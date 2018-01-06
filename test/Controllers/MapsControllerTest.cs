@@ -1,4 +1,6 @@
 using System.Net;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,11 +22,12 @@ namespace NavigationApi.Test.Controllers
 
             using (var server = new TestServer(hostBuilder))
             {
-                var response = await server
-                    .CreateRequest("/maps")
+                var response = await server.CreateRequest("/maps")
+                    .And(msg => msg.Content = new StringContent("{\"id\":\"map1\"}", Encoding.UTF8, "application/json"))
                     .PostAsync();
 
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+                Assert.Equal("/maps/map1", response.Headers.Location.ToString());
             }
         }
     }
