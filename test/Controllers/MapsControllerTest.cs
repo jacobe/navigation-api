@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -38,12 +39,12 @@ namespace NavigationApi.Test.Controllers
             using (var server = new TestServer(hostBuilder))
             {
                 var response = await server.CreateRequest("/maps")
-                    .And(msg => msg.Content = new StringContent("{\"id\":\"map1\",\"nodes\":{}}", Encoding.UTF8, "application/json"))
+                    .And(msg => msg.Content = new StringContent("{\"id\":\"map1\",\"nodes\":{\"a\":{}}}", Encoding.UTF8, "application/json"))
                     .PostAsync();
 
                 Assert.Equal(HttpStatusCode.Created, response.StatusCode);
                 Assert.Equal("/maps/map1", response.Headers.Location.ToString());
-                mapRepositoryMock.Verify(m => m.Create(It.Is<Map>(map => map.Id == "map1" && map.Nodes.Count == 0)));
+                mapRepositoryMock.Verify(m => m.Create(It.Is<Map>(map => map.Id == "map1" && map.Nodes.Single().Key == "a")));
             }
         }
     }

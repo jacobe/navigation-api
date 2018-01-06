@@ -41,5 +41,11 @@ namespace NavigationApi.Test.Persistance.CosmosDb
             Assert.Contains("b", result.Nodes.Keys);
             Assert.Equal(5, result.Nodes["a"].Edges[0].Distance);
         }
+
+        [Fact]
+        public async Task Throws_exception_when_map_with_same_id_already_exists()
+        {
+            // TODO
+        }
     }
 }

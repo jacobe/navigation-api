@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,6 +8,9 @@ namespace NavigationApi.Api.Domain
     {
         public Map(string id, params Node[] nodes)
         {
+            if (string.IsNullOrEmpty(id)) throw new ArgumentException("Must not be null or empty", nameof(id));
+            if (nodes == null) throw new ArgumentNullException(nameof(nodes));
+
             Id = id;
             Nodes = nodes.ToDictionary(n => n.Id, n => n);
         }
@@ -19,9 +23,14 @@ namespace NavigationApi.Api.Domain
             Nodes[from].Edges.Add(new Edge(Nodes[to].Id, distance));
         }
 
-        public override string ToString()
+        public void Validate()
         {
-            return Id;
+            if (Nodes.Count == 0)
+            {
+                throw new Exception("Must consist of one or more nodes");
+            }
         }
+
+        public override string ToString() => Id;
     }
 }

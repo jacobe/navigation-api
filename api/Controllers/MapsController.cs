@@ -32,15 +32,28 @@ namespace NavigationApi.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var nodes = from n in createMapRequest.Nodes
-                        select new Node(n.Key, n.Value.Select(e => new Edge(e.Key, e.Value)).ToArray());
-            var map = new Map(createMapRequest.Id, nodes.ToArray());
-
-            // TODO: Validate the map contents
+            Map map;
+            try
+            {
+                map = ToMap(createMapRequest);
+            }
+            catch (Exception e)
+            {
+                return BadRequest($"Map is invalid. {e.Message}");
+            }
             
             await _mapsRepository.Create(map);
 
             return Created(Url.Action("GetMap", new { id = createMapRequest.Id }), null);
+        }
+
+        private static Map ToMap(CreateMapRequestDto createMapRequest)
+        {
+            var nodes = from n in createMapRequest.Nodes
+                        select new Node(n.Key, n.Value.Select(e => new Edge(e.Key, e.Value)).ToArray());
+            var map = new Map(createMapRequest.Id, nodes.ToArray());
+            map.Validate();
+            return map;
         }
     }
 
