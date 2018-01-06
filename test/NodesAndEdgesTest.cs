@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Xunit;
 
 namespace NavigationApi.Test
@@ -27,31 +26,5 @@ namespace NavigationApi.Test
             var edge = new Edge(new Node("a"), distance: 1);
             Assert.Equal(1, edge.Distance);
         }
-    }
-
-    public class Node
-    {
-        public Node(string id, params Edge[] edges)
-        {
-            Id = id;
-            Edges = new List<Edge>(edges);
-        }
-
-        public string Id { get; }
-
-        public IList<Edge> Edges { get; }
-    }
-
-    public class Edge
-    {
-        public Edge(Node neighbour, int distance)
-        {
-            Node = neighbour;
-            Distance = distance;
-        }
-
-        public Node Node { get; }
-        public string NodeId => Node.Id;
-        public int Distance { get; }
     }
 }
