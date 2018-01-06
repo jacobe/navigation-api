@@ -43,7 +43,7 @@ namespace NavigationApi.Test.Persistance.CosmosDb
         }
 
         [Fact]
-        public async Task Throws_exception_when_map_with_same_id_already_exists()
+        public void Throws_exception_when_map_with_same_id_already_exists()
         {
             // TODO
         }
