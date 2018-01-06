@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using Xunit;
 
 namespace NavigationApi.Test
@@ -19,17 +19,5 @@ namespace NavigationApi.Test
             m1.Nodes.Add(new Node("a"));
             Assert.Equal(1, m1.Nodes.Count);
         }
-    }
-
-    public class Map
-    {
-        public Map(string id, params Node[] nodes)
-        {
-            Id = id;
-            Nodes = new List<Node>(nodes);
-        }
-
-        public string Id { get; }
-        public IList<Node> Nodes { get; }
     }
 }

@@ -23,17 +23,20 @@ namespace NavigationApi.Test
             Assert.Equal(2, p.Nodes.Count);
             Assert.Equal(a, p.Nodes.ElementAt(0));
             Assert.Equal(b, p.Nodes.ElementAt(1));
+            Assert.Equal(1, p.Distance);
         }
     }
 
     public class Path
     {
-        public Path(IEnumerable<Node> nodes)
+        public Path(IEnumerable<Node> nodes, int distance)
         {
             Nodes = new List<Node>(nodes).AsReadOnly();
+            Distance = distance;
         }
 
         public IReadOnlyCollection<Node> Nodes { get; }
+        public int Distance { get; }
     }
 
     public class ShortestPathAlgorithm
@@ -46,7 +49,7 @@ namespace NavigationApi.Test
                 && nodes[0].Edges[0].Neighbour == nodes[1]
                 && nodes[1].Edges.Count == 0)
             {
-                return new Path(nodes);
+                return new Path(nodes, nodes[0].Edges[0].Distance);
             }
 
             throw new NotImplementedException();
