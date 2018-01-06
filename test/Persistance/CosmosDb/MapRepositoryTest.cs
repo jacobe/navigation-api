@@ -25,7 +25,7 @@ namespace NavigationApi.Test.Persistance.CosmosDb
         }
 
         [Fact]
-        public async Task Can_store_map()
+        public async Task Can_store_and_retrieve_map()
         {
             var repository = new MapRepository(_documentClient, DatabaseId);
             var mapId = "testmap-" + DateTime.Now.ToString("u");
@@ -34,6 +34,10 @@ namespace NavigationApi.Test.Persistance.CosmosDb
                 new Node("b"));
             map.AddEdge("a", "b", 5);
             await repository.Create(map);
+
+            var result = await repository.GetById(mapId);
+            Assert.NotNull(result);
+            Assert.Equal(mapId, result.Id);
         }
     }
 }
