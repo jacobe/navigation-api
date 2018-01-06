@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace NavigationApi.Api.Domain
 {
-    public class ShortestPathAlgorithm
+    public class ShortestPathAlgorithm : IPathAlgorithm
     {
         public Path Find(Map map, string startId, string endId)
         {

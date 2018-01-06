@@ -11,11 +11,11 @@ namespace NavigationApi.Api.Controllers
     [Route("maps")]
     public class MapsController : Controller
     {
-        private readonly IMapRepository _mapsRepository;
+        private readonly IMapRepository _mapRepository;
 
-        public MapsController(IMapRepository mapsRepository)
+        public MapsController(IMapRepository mapRepository)
         {
-            _mapsRepository = mapsRepository;
+            _mapRepository = mapRepository;
         }
 
         [HttpGet("{id}")]
@@ -42,7 +42,7 @@ namespace NavigationApi.Api.Controllers
                 return BadRequest($"Map is invalid. {e.Message}");
             }
             
-            await _mapsRepository.Create(map);
+            await _mapRepository.Create(map);
 
             return Created(Url.Action("GetMap", new { id = createMapRequest.Id }), null);
         }

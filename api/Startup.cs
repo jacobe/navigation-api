@@ -36,6 +36,8 @@ namespace NavigationApi.Api
                     documentClient: svc.GetService<IDocumentClient>(),
                     databaseId: Configuration["CosmosDB:DatabaseId"]));
 
+            services.AddTransient<IPathAlgorithm, ShortestPathAlgorithm>();
+
             services.AddMvc();
         }
 
