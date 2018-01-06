@@ -14,13 +14,11 @@ namespace NavigationApi.Test.Persistance.CosmosDb
     public class MapRepositoryTest
     {
         private const string DatabaseId = "navigation-api-test";
-        private readonly DocumentClient _documentClient;
+        private readonly IDocumentClient _documentClient;
 
         public MapRepositoryTest()
         {
-            _documentClient = new DocumentClient(
-                new Uri("https://localhost:8081"),
-                "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==");
+            _documentClient = LocalEmulatorHelper.CreateDocumentClient();
 
             // TODO: Database initialization logic, eg. tear down and re-create database and collections for each test
         }
