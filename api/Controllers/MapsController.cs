@@ -21,7 +21,7 @@ namespace NavigationApi.Api.Controllers
         [HttpGet("{id}")]
         public IActionResult GetMap(string id)
         {
-            return Ok();
+            throw new NotImplementedException();
         }
 
         [HttpPost]
