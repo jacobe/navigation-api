@@ -18,5 +18,10 @@ namespace NavigationApi.Test
         {
             Nodes[from].Edges.Add(new Edge(Nodes[to], distance));
         }
+
+        public override string ToString()
+        {
+            return Id;
+        }
     }
 }

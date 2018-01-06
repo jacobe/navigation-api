@@ -59,15 +59,40 @@ namespace NavigationApi.Test
             yield return new object[] { map, "a", "a", "a", 0 };
         }
 
+        public static IEnumerable<object[]> MapBTestCases()
+        {
+            Map map = new Map("A",
+                new Node("a"),
+                new Node("b"),
+                new Node("c"),
+                new Node("d"));
+            
+            map.AddEdge("a", "b", 1);
+            map.AddEdge("b", "a", 2);
+            map.AddEdge("c", "d", 3);
+            map.AddEdge("d", "c", 4);
+
+            yield return new object[] { map, "a", "b", "a,b", 1 };
+            yield return new object[] { map, "a", "c", null, 0 };
+        }
+
         [Theory]
         [MemberData(nameof(MapATestCases))]
-        public void Finds_shortest_paths_in_map_A(Map map, string startId, string endId, string expectedPath, int expectedDistance)
+        [MemberData(nameof(MapBTestCases))]
+        public void Finds_shortest_paths_in_complex_maps(Map map, string startId, string endId, string expectedPath, int expectedDistance)
         {
             var shortestPath = new ShortestPathAlgorithm();
             Path path = shortestPath.Find(map, startId, endId);
 
-            Assert.Equal(expectedPath, string.Join(',', path.NodeIds));
-            Assert.Equal(expectedDistance, path.Distance);
+            if (expectedPath == null)
+            {
+                Assert.Null(path);
+            }
+            else
+            {
+                Assert.Equal(expectedPath, string.Join(',', path.NodeIds));
+                Assert.Equal(expectedDistance, path.Distance);
+            }
         }
     }
 
@@ -121,6 +146,12 @@ namespace NavigationApi.Test
                 path.Insert(0, c);
                 c = prev[c];
             }
+
+            if (path.Count == 0 && endId != startId)
+            {
+                return null; // meaning; no path found
+            }
+
             path.Insert(0, c);
 
             return new Path(path, dist[endId]);
