@@ -9,6 +9,7 @@ using Xunit;
 namespace NavigationApi.Test.Persistance.CosmosDb
 {
     // Please note! This test requires manually setting up a database named 'navigation-api-test' and a collection named 'maps'
+    // in the Azure Cosmos DB Storage Emulator (see https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator)
 
     public class MapRepositoryTest
     {
@@ -38,6 +39,9 @@ namespace NavigationApi.Test.Persistance.CosmosDb
             var result = await repository.GetById(mapId);
             Assert.NotNull(result);
             Assert.Equal(mapId, result.Id);
+            Assert.Contains("a", result.Nodes.Keys);
+            Assert.Contains("b", result.Nodes.Keys);
+            Assert.Equal(5, result.Nodes["a"].Edges[0].Distance);
         }
     }
 }
