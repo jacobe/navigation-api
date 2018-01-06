@@ -52,6 +52,11 @@ namespace NavigationApi.Api.Persistance.CosmosDb
 
             var results = await query.ToAsyncEnumerable().ToList();
             var mapDocument = results.FirstOrDefault();
+            
+            if (mapDocument == null)
+            {
+                return null; // map not found
+            }
 
             var map = ToMap(mapDocument);
             return map;

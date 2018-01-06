@@ -17,8 +17,14 @@ namespace NavigationApi.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPath(string id, string start, string end)
+        public async Task<IActionResult> GetPath(string id, string start, string end)
         {
+            var map = await _mapRepository.GetById(id);
+            if (map == null)
+            {
+                return NotFound($"Map with id '{id}' was not found");
+            }
+
             return Ok();
         }
     }
