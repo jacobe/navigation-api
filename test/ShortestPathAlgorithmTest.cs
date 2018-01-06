@@ -10,54 +10,76 @@ namespace NavigationApi.Test
         [Fact]
         public void Finds_shortest_path_between_two_points_with_one_edge()
         {
-            var b = new Node("b");
-            var a = new Node("a");
-            Map map = new Map("t1", a, b);
+            Map map = new Map("t1",
+                new Node("a"),
+                new Node("b"));
             map.AddEdge("a", "b", 1);
 
-            var startId = "a";
-            var endId = "b";
-
             var shortestPath = new ShortestPathAlgorithm();
-            Path p = shortestPath.Find(map, startId, endId);
+            Path p = shortestPath.Find(map, "a", "b");
 
-            Assert.Equal(2, p.Nodes.Count);
-            Assert.Equal(a, p.Nodes.ElementAt(0));
-            Assert.Equal(b, p.Nodes.ElementAt(1));
+            Assert.Equal(2, p.NodeIds.Length);
+            Assert.Equal("a", p.NodeIds.ElementAt(0));
+            Assert.Equal("b", p.NodeIds.ElementAt(1));
             Assert.Equal(1, p.Distance);
         }
 
         [Fact]
         public void Finds_shortest_path_between_two_points_with_two_edges()
         {
-            var a = new Node("a");
-            var b = new Node("b");
-            Map map = new Map("t1", a, b);
+            Map map = new Map("t2",
+                new Node("a"),
+                new Node("b"));
             map.AddEdge("a", "b", 2);
             map.AddEdge("a", "b", 1);
 
-            var startId = "a";
-            var endId = "b";
-
             var shortestPath = new ShortestPathAlgorithm();
-            Path p = shortestPath.Find(map, startId, endId);
+            Path p = shortestPath.Find(map, "a", "b");
 
-            Assert.Equal(2, p.Nodes.Count);
-            Assert.Equal(a, p.Nodes.ElementAt(0));
-            Assert.Equal(b, p.Nodes.ElementAt(1));
+            Assert.Equal(2, p.NodeIds.Length);
+            Assert.Equal("a", p.NodeIds.ElementAt(0));
+            Assert.Equal("b", p.NodeIds.ElementAt(1));
             Assert.Equal(1, p.Distance);
+        }
+
+        public static IEnumerable<object[]> MapATestCases()
+        {
+            Map map = new Map("A",
+                new Node("a"),
+                new Node("b"),
+                new Node("c"));
+
+            map.AddEdge("a", "b", 2);
+            map.AddEdge("a", "c", 5);
+            map.AddEdge("b", "c", 2);
+            map.AddEdge("c", "a", 8);
+
+            yield return new object[] { map, "a", "c", "a,b,c", 4 };
+            yield return new object[] { map, "b", "a", "b,c,a", 10 };
+            yield return new object[] { map, "a", "a", "a", 0 };
+        }
+
+        [Theory]
+        [MemberData(nameof(MapATestCases))]
+        public void Finds_shortest_paths_in_map_A(Map map, string startId, string endId, string expectedPath, int expectedDistance)
+        {
+            var shortestPath = new ShortestPathAlgorithm();
+            Path path = shortestPath.Find(map, startId, endId);
+
+            Assert.Equal(expectedPath, string.Join(',', path.NodeIds));
+            Assert.Equal(expectedDistance, path.Distance);
         }
     }
 
     public class Path
     {
-        public Path(IEnumerable<Node> nodes, int distance)
+        public Path(IEnumerable<string> nodeIds, int distance)
         {
-            Nodes = new List<Node>(nodes).AsReadOnly();
+            NodeIds = nodeIds.ToArray();
             Distance = distance;
         }
 
-        public IReadOnlyCollection<Node> Nodes { get; }
+        public string[] NodeIds { get; }
         public int Distance { get; }
     }
 
@@ -101,12 +123,7 @@ namespace NavigationApi.Test
             }
             path.Insert(0, c);
 
-            if (path.Count == 1) // means; no path found
-            {
-                return null;
-            }
-
-            return new Path(path.Select(id => nodes[id]), dist[endId]);
+            return new Path(path, dist[endId]);
         }
     }
 }
