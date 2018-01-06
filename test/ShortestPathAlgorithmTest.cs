@@ -26,6 +26,27 @@ namespace NavigationApi.Test
             Assert.Equal(b, p.Nodes.ElementAt(1));
             Assert.Equal(1, p.Distance);
         }
+
+        [Fact]
+        public void Finds_shortest_path_between_two_points_with_two_edges()
+        {
+            var a = new Node("a");
+            var b = new Node("b");
+            Map map = new Map("t1", a, b);
+            map.AddEdge("a", "b", 2);
+            map.AddEdge("a", "b", 1);
+
+            var startId = "a";
+            var endId = "b";
+
+            var shortestPath = new ShortestPathAlgorithm();
+            Path p = shortestPath.Find(map, startId, endId);
+
+            Assert.Equal(2, p.Nodes.Count);
+            Assert.Equal(a, p.Nodes.ElementAt(0));
+            Assert.Equal(b, p.Nodes.ElementAt(1));
+            Assert.Equal(1, p.Distance);
+        }
     }
 
     public class Path
@@ -45,15 +66,54 @@ namespace NavigationApi.Test
         public Path Find(Map map, string startId, string endId)
         {
             var nodes = map.Nodes;
-            if (nodes.Count == 2 
+            if (nodes.Count == 2
                 && nodes[startId].Edges.Count == 1
-                && nodes[startId].Edges[0].Neighbour == nodes[endId]
+                && nodes[startId].Edges[0].Node == nodes[endId]
                 && nodes[endId].Edges.Count == 0)
             {
                 return new Path(nodes.Values, nodes[startId].Edges[0].Distance);
             }
 
-            throw new NotImplementedException();
+            Dictionary<string, int> dist = nodes.ToDictionary(n => n.Key, n => int.MaxValue);
+            dist[startId] = 0; // initialize distance from start node to itself to 0
+
+            Dictionary<string, string> prev = nodes.ToDictionary(n => n.Key, n => (string)null);
+
+            var queue = new HashSet<string>(nodes.Keys);
+            while (queue.Count != 0)
+            {
+                var u = queue.OrderBy(v => dist[v]).First();
+                queue.Remove(u);
+                
+                if (u == endId) break; // we reached the target, quit here
+
+                foreach (var edge in nodes[u].Edges)
+                {
+                    var v = edge.Node.Id;
+                    var alt = dist[u] + edge.Distance;
+                    if (alt < dist[v])
+                    {
+                        dist[v] = alt;
+                        prev[v] = u;
+                    }
+                }
+            }
+
+            var path = new List<string>();
+            var c = endId;
+            while (prev[c] != null)
+            {
+                path.Insert(0, c);
+                c = prev[c];
+            }
+            path.Insert(0, c);
+
+            if (path.Count == 1) // means; no path found
+            {
+                return null;
+            }
+
+            return new Path(path.Select(id => nodes[id]), dist[endId]);
         }
     }
 }

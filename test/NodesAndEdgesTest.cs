@@ -46,11 +46,11 @@ namespace NavigationApi.Test
     {
         public Edge(Node neighbour, int distance)
         {
-            Neighbour = neighbour;
+            Node = neighbour;
             Distance = distance;
         }
 
-        public Node Neighbour { get; }
+        public Node Node { get; }
         public int Distance { get; }
     }
 }
