@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
+using NavigationApi.Api.Domain;
 
-namespace NavigationApi.Test
+namespace NavigationApi.Test.Domain
 {
     public class ShortestPathAlgorithmTest
     {
@@ -94,17 +95,5 @@ namespace NavigationApi.Test
                 Assert.Equal(expectedDistance, path.Distance);
             }
         }
-    }
-
-    public class Path
-    {
-        public Path(IEnumerable<string> nodeIds, int distance)
-        {
-            NodeIds = nodeIds.ToArray();
-            Distance = distance;
-        }
-
-        public string[] NodeIds { get; }
-        public int Distance { get; }
     }
 }

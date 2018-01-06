@@ -1,4 +1,4 @@
-namespace NavigationApi.Test
+namespace NavigationApi.Api.Domain
 {
     public class Edge
     {

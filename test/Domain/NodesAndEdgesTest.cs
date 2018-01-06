@@ -1,6 +1,7 @@
 using Xunit;
+using NavigationApi.Api.Domain;
 
-namespace NavigationApi.Test
+namespace NavigationApi.Test.Domain
 {
     public class NodesAndEdgesTest
     {

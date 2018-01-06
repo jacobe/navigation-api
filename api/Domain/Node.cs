@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NavigationApi.Test
+namespace NavigationApi.Api.Domain
 {
     public class Node
     {

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NavigationApi.Test
+namespace NavigationApi.Api.Domain
 {
-        public class ShortestPathAlgorithm
+    public class ShortestPathAlgorithm
     {
         public Path Find(Map map, string startId, string endId)
         {
