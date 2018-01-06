@@ -66,13 +66,6 @@ namespace NavigationApi.Test
         public Path Find(Map map, string startId, string endId)
         {
             var nodes = map.Nodes;
-            if (nodes.Count == 2
-                && nodes[startId].Edges.Count == 1
-                && nodes[startId].Edges[0].Node == nodes[endId]
-                && nodes[endId].Edges.Count == 0)
-            {
-                return new Path(nodes.Values, nodes[startId].Edges[0].Distance);
-            }
 
             Dictionary<string, int> dist = nodes.ToDictionary(n => n.Key, n => int.MaxValue);
             dist[startId] = 0; // initialize distance from start node to itself to 0
