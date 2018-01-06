@@ -31,14 +31,15 @@ namespace NavigationApi.Test
 
     public class Node
     {
-        public Node(string id)
+        public Node(string id, params Edge[] edges)
         {
             Id = id;
+            Edges = new List<Edge>(edges);
         }
 
         public string Id { get; }
 
-        public IList<Edge> Edges { get; } = new List<Edge>();
+        public IList<Edge> Edges { get; }
     }
 
     public class Edge
