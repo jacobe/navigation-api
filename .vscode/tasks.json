@@ -10,6 +10,18 @@
                 "${workspaceFolder}/api/api.csproj"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "test",
+            "command": "dotnet",
+            "type": "process",
+            "options": {
+                "cwd": "${workspaceFolder}/test"
+            },
+            "args": [
+                "xunit"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }
