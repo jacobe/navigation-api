@@ -17,14 +17,14 @@ namespace NavigationApi.Test.Domain
         {
             var a = new Node("a");
             var b = new Node("b");
-            a.Edges.Add(new Edge(b, 1));
+            a.Edges.Add(new Edge("b", 1));
             Assert.Equal(1, a.Edges.Count);
         }
 
         [Fact]
         public void Edges_have_a_distance()
         {
-            var edge = new Edge(new Node("a"), distance: 1);
+            var edge = new Edge("a", distance: 1);
             Assert.Equal(1, edge.Distance);
         }
     }

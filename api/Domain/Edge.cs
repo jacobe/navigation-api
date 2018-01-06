@@ -2,14 +2,13 @@ namespace NavigationApi.Api.Domain
 {
     public class Edge
     {
-        public Edge(Node neighbour, int distance)
+        public Edge(string nodeId, int distance)
         {
-            Node = neighbour;
+            NodeId = nodeId;
             Distance = distance;
         }
 
-        public Node Node { get; }
-        public string NodeId => Node.Id;
+        public string NodeId { get; }
         public int Distance { get; }
     }
 }

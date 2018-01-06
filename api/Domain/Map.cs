@@ -16,7 +16,7 @@ namespace NavigationApi.Api.Domain
 
         public void AddEdge(string from, string to, int distance)
         {
-            Nodes[from].Edges.Add(new Edge(Nodes[to], distance));
+            Nodes[from].Edges.Add(new Edge(Nodes[to].Id, distance));
         }
 
         public override string ToString()
