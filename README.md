@@ -14,5 +14,5 @@ dotnet run
 ## Running the unit tests
 ```
 cd /test
-dotnet xunit
+dotnet xunit -verbose
 ```
