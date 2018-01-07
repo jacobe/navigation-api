@@ -7,7 +7,7 @@ Example implementation of a navigation algorithm with an API
 
 ## Building and running the app
 ```
-cd /app
+cd /api
 dotnet run
 ```
 
